@@ -5,6 +5,13 @@ Sphere::Sphere(const Eigen::Vector3d& c, double r) :
 	radius(r)
 {}
 
+Sphere::Sphere(const Sphere & s)
+{
+	texture = s.texture;
+	cent_pos = s.cent_pos;
+	radius = s.radius;
+}
+
 bool Sphere::hit(const Ray& ray, bool cal_int, Eigen::Vector3d& pos, Eigen::Vector3d& norm, double& t)
 {
 	// 解二次方程法

@@ -10,5 +10,6 @@ public:
 	double radius;
 
 	Sphere(const Eigen::Vector3d& c, double r);
+	Sphere(const Sphere& s);
 	bool hit(const Ray& ray, bool cal_int, Eigen::Vector3d& pos, Eigen::Vector3d& norm, double& t);
 };

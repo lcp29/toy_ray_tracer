@@ -21,23 +21,33 @@ int f2i(double f)
 int main(int argc, char* argv[])
 {
 	std::ios::sync_with_stdio(false);
-	Sphere s(Eigen::Vector3d(-3, 1, -9), 1);
-	Sphere s2(Eigen::Vector3d(1, 0, -10), 1.2);
+	Sphere s(Eigen::Vector3d(-1.2, -1, -8), 1);
+	Sphere s2(Eigen::Vector3d(1, -1, -8.5), 1);
+	Sphere s3(Eigen::Vector3d(0, -100000, 0), 99993);
 	Texture t;
-	t.p = 400;
+	t.p = 700;
 	t.setKa(RGB(1, 0.5, 0.5));
 	t.setKs(RGB(10, 5, 5));
 	t.setKd(RGB(10, 5, 5));
 	s.texture = t;
+	t.p = 200;
 	t.setKa(RGB(0.5, 1, 0.5));
 	t.setKs(RGB(5, 10, 5));
 	t.setKd(RGB(5, 10, 5));
 	s2.texture = t;
+	t.p = 10;
+	t.setKa(RGB(4, 4, 4));
+	t.setKs(RGB(3, 3, 3));
+	t.setKd(RGB(3, 3, 3));
+	s3.texture = t;
 	RayTracer rt;
-	PointLight ptl(Eigen::Vector3d(-3, 3, -7), RGB(2, 2, 2));
+	PointLight ptl(Eigen::Vector3d(2, 5, -6), RGB(1.5, 1.5, 1.5));
+	PointLight ptl2(Eigen::Vector3d(-2, 2.5, -7), RGB(2, 2, 2));
 	rt.addPtls(ptl);
+	rt.addPtls(ptl2);
 	rt.addSurface(s);
 	rt.addSurface(s2);
+	rt.addSurface(s3);
 	rt.draw();
 	SDL_Window* win = nullptr;
 	SDL_Renderer* renderer = nullptr;

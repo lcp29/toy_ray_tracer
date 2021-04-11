@@ -9,7 +9,7 @@ RayTracer::RayTracer()
 	l = -0.1;
 	b = -0.075;
 	bgcolor = RGB(0, 0, 0);
-	enbflag = ENABLE_AMBIENT | ENABLE_DIFFUSE | ENABLE_SPECULAR;
+	enbflag = ENABLE_AMBIENT | ENABLE_DIFFUSE | ENABLE_SPECULAR | ENABLE_SHADOW;
 	Ia = RGB(1.5, 1.5, 1.5);
 }
 
@@ -27,6 +27,7 @@ void RayTracer::draw()
 	{
 		for (int j = 0; j < 480; j++)
 		{
+			bool skip = false;
 			vbuf[i][j] = bgcolor;
 			Ray r = genRay(i, j);
 			Eigen::Vector3d pos_int, norm;
@@ -44,6 +45,15 @@ void RayTracer::draw()
 			{
 				for (auto k = ptls.begin(); k != ptls.end(); k++)
 				{
+					if (enbflag & ENABLE_SHADOW)
+					{
+						Eigen::Vector3d tmpv;
+						Texture tmpt;
+						Eigen::Vector3d new_d = k->pos - pos_int;
+						Eigen::Vector3d new_s = pos_int + epsilon * new_d;
+						Ray sray(new_s, new_d);
+						if(hit(sray, false, tmpv, tmpv, tmpt)) continue;
+					}
 					Eigen::Vector3d l = (k->pos - pos_int).normalized();
 					if (enbflag & ENABLE_DIFFUSE)
 					{
@@ -103,13 +113,16 @@ bool RayTracer::hit(const Ray& r, bool cal_int, Eigen::Vector3d& pos, Eigen::Vec
 	{
 		double tmp;
 		Eigen::Vector3d pos_int_t, norm_t;
-		is_hit = (*k)->hit(r, cal_int, pos_int_t, norm_t, tmp) || is_hit;
-		if (tmp < tmin)
+		if ((*k)->hit(r, cal_int, pos_int_t, norm_t, tmp))
 		{
-			tmin = tmp;
-			pos = pos_int_t;
-			norm = norm_t;
-			te = (*k)->texture;
+			is_hit = true;
+			if (tmp < tmin)
+			{
+				tmin = tmp;
+				pos = pos_int_t;
+				norm = norm_t;
+				te = (*k)->texture;
+			}
 		}
 	}
 	return is_hit;

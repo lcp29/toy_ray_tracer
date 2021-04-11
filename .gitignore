@@ -34,4 +34,6 @@
 # Visual Studio
 /.vs/
 /Debug/
+/Release/
 /FoCG_3_Ray_tracer/Debug/
+/FoCG_3_Ray_tracer/Release/

@@ -5,7 +5,7 @@ Sphere::Sphere(const Eigen::Vector3d& c, double r) :
 	radius(r)
 {}
 
-Sphere::Sphere(const Sphere & s)
+Sphere::Sphere(const Sphere& s)
 {
 	texture = s.texture;
 	cent_pos = s.cent_pos;
@@ -19,7 +19,7 @@ bool Sphere::hit(const Ray& ray, bool cal_int, Eigen::Vector3d& pos, Eigen::Vect
 	double b = 2 * ray.direction.dot(ray.start - cent_pos);
 	double c = (ray.start - cent_pos).dot(ray.start - cent_pos) - radius * radius;
 	double delta = b * b - 4 * a * c;
-	if (c / a > 0 && b / a > 0)
+	if (delta < 0 || (c / a > 0 && b / a > 0))
 		return false;
 	if (cal_int == false)
 		return true;

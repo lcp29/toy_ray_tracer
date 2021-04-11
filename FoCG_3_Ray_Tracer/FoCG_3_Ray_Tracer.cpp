@@ -18,6 +18,35 @@ int f2i(double f)
 	return i;
 }
 
+unsigned flagt = 14;
+
+typedef struct timpack
+{
+	RayTracer* rt;
+	SDL_Renderer* renderer;
+} timpack;
+
+Uint32 rtdraw(Uint32 interval, void* tp)
+{
+	RayTracer* prt = static_cast<timpack*>(tp)->rt;
+	SDL_Renderer* renderer = static_cast<timpack*>(tp)->renderer;
+	if (++flagt == 16) flagt = 0;
+	prt->enbflag = flagt;
+	prt->draw();
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+	SDL_RenderClear(renderer);
+	for (int i = 0; i < 640; i++)
+		for (int j = 0; j < 480; j++)
+		{
+			RGB pixel = prt->getPixel(i, 480 - j);
+			SDL_SetRenderDrawColor(renderer, f2i(pixel.r), f2i(pixel.g), f2i(pixel.b), 1);
+			SDL_RenderDrawPoint(renderer, i, j);
+		}
+	SDL_RenderPresent(renderer);
+	std::cout << flagt << std::endl;
+	return 1000;
+}
+
 int main(int argc, char* argv[])
 {
 	std::ios::sync_with_stdio(false);
@@ -48,20 +77,15 @@ int main(int argc, char* argv[])
 	rt.addSurface(s);
 	rt.addSurface(s2);
 	rt.addSurface(s3);
-	rt.draw();
 	SDL_Window* win = nullptr;
 	SDL_Renderer* renderer = nullptr;
+	SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_CreateWindowAndRenderer(640, 480, 0, &win, &renderer);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-	SDL_RenderClear(renderer);
-	for(int i = 0;i < 640;i++)
-		for (int j = 0; j < 480; j++)
-		{
-			RGB pixel = rt.getPixel(i, 480 - j);
-			SDL_SetRenderDrawColor(renderer, f2i(pixel.r), f2i(pixel.g), f2i(pixel.b), 1);
-			SDL_RenderDrawPoint(renderer, i, j);
-		}
-	SDL_RenderPresent(renderer);
+	timpack tp;
+	tp.rt = &rt;
+	tp.renderer = renderer;
+	SDL_TimerID timerid = SDL_AddTimer(1000, rtdraw, &tp);
+	std::cout << "id: " << timerid << std::endl;
 	bool quit = false;
 	SDL_Event e;
 	while (!quit)

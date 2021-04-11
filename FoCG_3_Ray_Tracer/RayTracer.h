@@ -14,8 +14,8 @@
 #define ENABLE_DIFFUSE 1
 #define ENABLE_SPECULAR 1<<1
 #define ENABLE_AMBIENT 1<<2
-#define ENABLE_MIRROR 1<<3
-#define ENABLE_SHADOW 1<<4
+#define ENABLE_SHADOW 1<<3
+#define ENABLE_MIRROR 1<<4
 
 constexpr double epsilon = 1e-8;
 

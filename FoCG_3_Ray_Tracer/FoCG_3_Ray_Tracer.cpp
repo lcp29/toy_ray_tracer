@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 	t.setKd(RGB(5, 10, 5));
 	s2.texture = t;
 	t.p = 10;
-	t.setKa(RGB(4, 4, 4));
+	t.setKa(RGB(0.1, 0.1, 0.1));
 	t.setKs(RGB(3, 3, 3));
 	t.setKd(RGB(3, 3, 3));
 	s3.texture = t;
@@ -84,8 +84,9 @@ int main(int argc, char* argv[])
 	timpack tp;
 	tp.rt = &rt;
 	tp.renderer = renderer;
-	SDL_TimerID timerid = SDL_AddTimer(1000, rtdraw, &tp);
-	std::cout << "id: " << timerid << std::endl;
+	rtdraw(0, &tp);
+	//SDL_TimerID timerid = SDL_AddTimer(1000, rtdraw, &tp);
+	//std::cout << "id: " << timerid << std::endl;
 	bool quit = false;
 	SDL_Event e;
 	while (!quit)

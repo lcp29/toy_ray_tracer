@@ -2,8 +2,8 @@
 
 RayTracer::RayTracer()
 {
-	for (int i = 0; i < 640; i++)
-		vbuf[i] = new RGB[480];
+	for (int i = 0; i < SX; i++)
+		vbuf[i] = new RGB[SY];
 	dimco = 1;
 	d = Eigen::Vector3d(0, 0, -0.1);
 	l = -0.1;
@@ -15,7 +15,7 @@ RayTracer::RayTracer()
 
 RayTracer::~RayTracer()
 {
-	for (int i = 0; i < 640; i++)
+	for (int i = 0; i < SX; i++)
 		delete[] vbuf[i];
 	for (auto i = surfaces.begin(); i != surfaces.end(); i++)
 		delete (*i);
@@ -23,9 +23,9 @@ RayTracer::~RayTracer()
 
 void RayTracer::draw()
 {
-	for (int i = 0; i < 640; i++)
+	for (int i = 0; i < SX; i++)
 	{
-		for (int j = 0; j < 480; j++)
+		for (int j = 0; j < SY; j++)
 		{
 			bool skip = false;
 			vbuf[i][j] = bgcolor;
@@ -41,7 +41,7 @@ void RayTracer::draw()
 				vbuf[i][j].g += te.ka.g * Ia.g;
 				vbuf[i][j].b += te.ka.b * Ia.b;
 			}
-			if ((enbflag & ENABLE_DIFFUSE) || (enbflag & ENABLE_SPECULAR))
+			if ((enbflag & ENABLE_DIFFUSE) || (enbflag & ENABLE_SPECULAR) || (enbflag & ENABLE_SHADOW))
 			{
 				for (auto k = ptls.begin(); k != ptls.end(); k++)
 				{
@@ -100,8 +100,8 @@ Ray RayTracer::genRay(int i, int j)
 {
 	return Ray(Eigen::Vector3d(0, 0, 0),
 		d +
-		Eigen::Vector3d(l + 0.0003125 * (i + 0.5),
-			b + (0.0003125 * (j + 0.5)),
+		Eigen::Vector3d(l + 0.2 / SX * (i + 0.5),
+			b + (0.15 / SY * (j + 0.5)),
 			0));
 }
 

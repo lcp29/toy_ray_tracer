@@ -17,11 +17,14 @@
 #define ENABLE_SHADOW 1<<3
 #define ENABLE_MIRROR 1<<4
 
+#define SX 1280
+#define SY 960
+
 constexpr double epsilon = 1e-8;
 
 class RayTracer
 {
-	// 视口固定，分辨率640x480，轴对应u->y, v->x, w->-z，d = 0.1, fovX = 90度
+	// 视口固定，分辨率SXxSY，轴对应u->y, v->x, w->-z，d = 0.1, fovX = 90度
 public:
 	RayTracer();
 	~RayTracer();
@@ -32,7 +35,7 @@ public:
 	RGB getPixel(int x, int y);
 	RGB Ia;
 private:
-	RGB* vbuf[640];	               // 屏幕像素640*480
+	RGB* vbuf[SX];	               // 屏幕像素SXxSY
 	std::vector<Surface*> surfaces; // 待渲染图元
 	std::vector<PointLight> ptls;  // 点光源
 	double dimco;				   // 亮度归一化系数

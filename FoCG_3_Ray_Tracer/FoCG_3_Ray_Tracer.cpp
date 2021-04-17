@@ -12,6 +12,8 @@
 #include <cmath>
 #include <png++/png.hpp>
 #include <string>
+#include <fstream>
+#include <map>
 
 #define SDL_DRAW 1
 
@@ -28,7 +30,7 @@ int f2i(double f)
 	return i;
 }
 
-unsigned flagt = 14;
+bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls);
 
 typedef struct timpack
 {
@@ -60,7 +62,6 @@ Uint32 rtdraw(Uint32 interval, void* tp)
 		}
 #ifdef SDL_DRAW
 	SDL_RenderPresent(renderer);
-	std::cout << flagt << std::endl;
 #elif PNG_OUTPUT
 	image.write("output.png");
 #endif
@@ -78,119 +79,19 @@ int main(int argc, char* argv[])
 	double E = std::stod(offsets);
 #endif
 	std::ios::sync_with_stdio(false);
-	RayTracer rt;
-	Sphere bg(Eigen::Vector3d(0, -100000, 0), 99995);
-	Sphere s(Eigen::Vector3d(0.816497 + E, -4, -10.3382), 1);
-	Texture t;
-	t.setKm(RGB(0, 0, 0));
-	t.p = 2000;
-	t.setKa(RGB(1, 0.5, 0.5));
-	t.setKs(RGB(10, 5, 5));
-	t.setKd(RGB(10, 5, 5));
-	s.texture = t;
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(0.298858 + E, -4, -12.27006);
-	t.p = 400;
-	t.setKa(RGB(1, 1, 0.5));
-	t.setKs(RGB(7, 7, 5));
-	t.setKd(RGB(4, 10, 5));
-	s.texture = t;
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-1.115355 + E, -4, -10.855841);
-	t.p = 1000;
-	t.setKa(RGB(0.3, 0, 2));
-	t.setKs(RGB(3, 2, 10));
-	t.setKd(RGB(2, 2, 10));
-	s.texture = t;
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(0 + E, -2.36, -11.1547);
-	t.p = 10;
-	t.setKa(RGB(0.3, 0, 1));
-	t.setKs(RGB(6, 2, 8));
-	t.setKd(RGB(6, 1, 8));
-	s.texture = t;
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-5. + E, -5, -10);
-	s.radius = 2;
-	t.p = 10000;
-	t.setKa(RGB(0.3, 0.3, 0.3));
-	t.setKs(RGB(10, 10, 10));
-	t.setKd(RGB(3, 3, 3));
-	s.texture = t;
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-6.28558 + E, -3.4679, -10);
-	s.radius = 0.9;
-	t.p = 100;
-	t.setKa(RGB(0.3, 0.3, 0.3));
-	t.setKs(RGB(10, 10, 10));
-	t.setKd(RGB(1, 1, 1));
-	s.texture = t;
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-3.71442 + E, -3.4679, -10);
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-5. + E, -4.4, -8.2);
-	s.radius = 0.5;
-	rt.addSurface(s);
 
-	//s.cent_pos = Eigen::Vector3d(-5, -3.58578, -8.58578);
-	s.radius = 0.19;
-	//rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-5.70711 + E, -3.58578, -8.77526);
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-4.29289 + E, -3.58578, -8.77526);
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-5.35356 + E, -4.29289, -9.38762);
-	s.radius = 1.03;
-	t.p = 10;
-	t.setKa(RGB(0.3, 0.3, 0.3));
-	t.setKs(RGB(3, 3, 3));
-	t.setKd(RGB(70, 70, 70));
-	s.texture = t;
-	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-4.64644 + E, -4.29289, -9.38762);
-	rt.addSurface(s);
-	t.p = 10;
-	t.setKa(RGB(0.5, 0.5, 0.5));
-	t.setKs(RGB(3, 3, 3));
-	t.setKd(RGB(3, 3, 3));
-	t.setKm(RGB(0.2, 0.2, 0.2));
-	bg.texture = t;
-	PointLight ptl(Eigen::Vector3d(2, 5, -6), RGB(0.9, 0.9, 0.9));
-	PointLight ptl2(Eigen::Vector3d(-2, 2.5, -7), RGB(0.9, 0.9, 0.9));
-	PointLight ptl3(Eigen::Vector3d(-0.149429 + E, -3.6, -10.5970), RGB(0.9, 0.9, 0.9));
-	rt.addPtls(ptl);
-	rt.addPtls(ptl2);
-	rt.addPtls(ptl);
-	rt.addPtls(ptl2);
-	//rt.addPtls(ptl3);
-	rt.addSurface(bg);
-	rt.setCamera(Eigen::Vector3d(0, 0, 2), Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0));
-	/*Sphere s(Eigen::Vector3d(-1.2, -1, -8), 1);
-	Sphere s2(Eigen::Vector3d(1, -1, -8.5), 1);
-	Sphere s3(Eigen::Vector3d(0, -100000, 0), 99993);
-	Texture t;
-	t.p = 700;
-	t.setKa(RGB(1, 0.5, 0.5));
-	t.setKs(RGB(10, 5, 5));
-	t.setKd(RGB(10, 5, 5));
-	s.texture = t;
-	t.p = 200;
-	t.setKa(RGB(0.5, 1, 0.5));
-	t.setKs(RGB(5, 10, 5));
-	t.setKd(RGB(5, 10, 5));
-	s2.texture = t;
-	t.p = 10;
-	t.setKa(RGB(1, 1, 1));
-	t.setKs(RGB(3, 3, 3));
-	t.setKd(RGB(3, 3, 3));
-	s3.texture = t;
-	PointLight ptl(Eigen::Vector3d(2, 5, -6), RGB(1.5, 1.5, 1.5));
-	PointLight ptl2(Eigen::Vector3d(-2, 2.5, -7), RGB(2, 2, 2));
-	rt.addPtls(ptl);
-	rt.addPtls(ptl2);
-	rt.addSurface(s);
-	rt.addSurface(s2);
-	rt.addSurface(s3);*/
+	RayTracer rt;
+	std::vector<Surface*> sur;
+	std::vector<PointLight> ptls;
+	if (!getmod(sur, ptls))
+	{
+		std::cout << "Error reading file \'mod.txt\'.\n" << std::endl;
+		return 0;
+	}
+	for (auto i = sur.begin(); i != sur.end(); i++)
+		rt.addSurface(*i);
+	for (auto i = ptls.begin(); i != ptls.end(); i++)
+		rt.addPtls(*i);
 	timpack tp;
 	tp.rt = &rt;
 #ifdef SDL_DRAW
@@ -216,4 +117,63 @@ int main(int argc, char* argv[])
 	SDL_Quit();
 #endif
 	return 0;
+}
+
+bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls)
+{
+	std::ifstream mod;
+	mod.open("mod.txt", std::ios::in);
+	if (mod.fail())
+	{
+		std::cout << "Error: Unable to open file \'mod.txt\'." << std::endl;
+		return false;
+	}
+	std::map<std::string, Texture> textures;
+	std::string line;
+	const std::string spaces{ " \t\n\r" };
+	while (!mod.eof())
+	{
+		std::getline(mod, line);
+		auto firstpos = line.find_first_not_of(spaces);
+		if (line[firstpos] == '#')
+			continue;
+		std::stringstream liness;
+		liness << line;
+		line.erase(); //¸´ÓÃ
+		while (!liness.eof())
+		{
+			liness >> line;
+			if (line == "t")
+			{
+				Texture t;
+				liness >> line
+					>> t.km.r >> t.km.g >> t.km.b
+					>> t.ka.r >> t.ka.g >> t.ka.b
+					>> t.ks.r >> t.ks.g >> t.ks.b
+					>> t.kd.r >> t.kd.g >> t.kd.b >> t.p;
+				textures[line] = t;
+			}
+			else if (line == "s")
+			{
+				liness >> line;
+				if (line == "s")
+				{
+					Sphere* s = new Sphere;
+					liness >> s->cent_pos[0] >> s->cent_pos[1] >> s->cent_pos[2]
+						>> s->radius >> line;
+					s->texture = textures[line];
+					surfaces.push_back((Surface*)s);
+				}
+			}
+			else if (line == "l")
+			{
+				PointLight ptl;
+				liness >> ptl.pos[0] >> ptl.pos[1] >> ptl.pos[2]
+					>> ptl.luminance.r >> ptl.luminance.g >> ptl.luminance.b;
+				ptls.push_back(ptl);
+			}
+		}
+	}
+	mod.close();
+	return true;
 }

@@ -12,6 +12,9 @@ Sphere::Sphere(const Sphere& s)
 	radius = s.radius;
 }
 
+Sphere::Sphere()
+{}
+
 bool Sphere::hit(const Ray& ray, bool cal_int, Eigen::Vector3d& pos, Eigen::Vector3d& norm, double& t)
 {
 	// 解二次方程法

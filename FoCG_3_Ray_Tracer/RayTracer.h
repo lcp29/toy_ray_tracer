@@ -34,6 +34,7 @@ public:
 	RGB render(const Ray& ray);
 	RGB render_nomirror(const Ray& r, Eigen::Vector3d& pos, Eigen::Vector3d& nor, Texture& t);
 	void addSurface(const Sphere& s);
+	void addSurface(Surface* s);
 	void addPtls(const PointLight& p);
 	unsigned enbflag;
 	RGB getPixel(int x, int y);

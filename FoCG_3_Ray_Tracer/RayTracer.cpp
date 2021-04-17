@@ -109,6 +109,11 @@ void RayTracer::addSurface(const Sphere& s)
 	surfaces.push_back(ps);
 }
 
+void RayTracer::addSurface(Surface* s)
+{
+	surfaces.push_back(s);
+}
+
 void RayTracer::addPtls(const PointLight& p)
 {
 	ptls.push_back(p);

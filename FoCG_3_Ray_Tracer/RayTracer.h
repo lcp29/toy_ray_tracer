@@ -31,7 +31,7 @@ public:
 	~RayTracer();
 	void draw();
 	RGB render(const Ray& ray);
-	RGB render_nomirror(const Ray& ray, Ray& res, Texture& t);
+	RGB render_nomirror(const Ray& r, Eigen::Vector3d& pos, Eigen::Vector3d& nor, Texture& t);
 	void addSurface(const Sphere& s);
 	void addPtls(const PointLight& p);
 	unsigned enbflag;

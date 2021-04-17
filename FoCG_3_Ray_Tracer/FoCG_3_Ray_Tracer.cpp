@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
 	t.setKa(RGB(0.5, 0.5, 0.5));
 	t.setKs(RGB(3, 3, 3));
 	t.setKd(RGB(3, 3, 3));
-	t.setKm(RGB(2, 2, 2));
+	t.setKm(RGB(0.2, 0.2, 0.2));
 	bg.texture = t;
 	PointLight ptl(Eigen::Vector3d(2, 5, -6), RGB(0.9, 0.9, 0.9));
 	PointLight ptl2(Eigen::Vector3d(-2, 2.5, -7), RGB(0.9, 0.9, 0.9));
@@ -164,6 +164,7 @@ int main(int argc, char* argv[])
 	rt.addPtls(ptl2);
 	//rt.addPtls(ptl3);
 	rt.addSurface(bg);
+	rt.setCamera(Eigen::Vector3d(0, 0, 2), Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0));
 	/*Sphere s(Eigen::Vector3d(-1.2, -1, -8), 1);
 	Sphere s2(Eigen::Vector3d(1, -1, -8.5), 1);
 	Sphere s3(Eigen::Vector3d(0, -100000, 0), 99993);

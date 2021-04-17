@@ -8,7 +8,7 @@ RayTracer::RayTracer()
 	l = -0.1;
 	b = -0.075;
 	bgcolor = RGB(0, 0, 0);
-	enbflag = ENABLE_AMBIENT | ENABLE_DIFFUSE | ENABLE_SPECULAR | ENABLE_SHADOW;
+	enbflag = ENABLE_AMBIENT | ENABLE_DIFFUSE | ENABLE_SPECULAR | ENABLE_SHADOW | ENABLE_MIRROR;
 	Ia = RGB(1.5, 1.5, 1.5);
 	e = Eigen::Vector3d(0, 0, 0);
 	u = Eigen::Vector3d(1, 0, 0);
@@ -37,28 +37,27 @@ void RayTracer::draw()
 
 RGB RayTracer::render(const Ray& r)
 {
-	Ray res;
+	Eigen::Vector3d pos, nor;
 	Texture t, t2;
-	t.setKm(RGB(2, 2, 2));
-	RGB pixel = render_nomirror(r, res, t);
-	if (enbflag & ENABLE_MIRROR && res.start[0] != std::numeric_limits<double>::infinity() && (t.km.r != 0 || t.km.g != 0 || t.km.b != 0))
+	RGB pixel = render_nomirror(r, pos, nor, t);
+	if (enbflag & ENABLE_MIRROR && pos[0] != std::numeric_limits<double>::infinity() && (t.km.r != 0 || t.km.g != 0 || t.km.b != 0))
 	{
-		Eigen::Vector3d dir = r.direction + 2 * res.direction * res.direction.dot(r.direction);
-		Ray refl(res.start + epsilon * dir, dir);
-		RGB refintensity = render_nomirror(refl, res, t2);
+		Eigen::Vector3d dir = r.direction - 2 * nor * nor.dot(r.direction);
+		Ray refl(pos + epsilon * dir, dir);
+		RGB refintensity = render_nomirror(refl, pos, nor, t2);
 		pixel = pixel + t.km * refintensity;
 	}
 	return pixel;
 }
 
-RGB RayTracer::render_nomirror(const Ray& r, Ray& res, Texture& t)	//res: 存储击中点和法线
+RGB RayTracer::render_nomirror(const Ray& r, Eigen::Vector3d& pos, Eigen::Vector3d& nor, Texture& t)	//res: 存储击中点和法线
 {
 	Eigen::Vector3d pos_int, norm;
 	Texture te;
 	RGB pixel(0, 0, 0);
 	if (!hit(r, true, pos_int, norm, te))
 	{
-		res.start[0] = std::numeric_limits<double>::infinity();
+		pos[0] = std::numeric_limits<double>::infinity();
 		return bgcolor;
 	}
 	if (enbflag & ENABLE_AMBIENT)
@@ -97,7 +96,8 @@ RGB RayTracer::render_nomirror(const Ray& r, Ray& res, Texture& t)	//res: 存储击
 			}
 		}
 	}
-	res = Ray(pos_int, norm);
+	pos = pos_int;
+	nor = norm;
 	t = te;
 	return pixel;
 }

@@ -7,13 +7,13 @@
 #include "RayTracer.h"
 #include <iostream>
 #include <string>
-#include <SDL2/sdl.h>
+#include <SDL2/SDL.h>
 #include <eigen3/Eigen/Eigen>
 #include <cmath>
 #include <png++/png.hpp>
 #include <string>
 
-#define PNG_OUTPUT 1
+#define SDL_DRAW 1
 
 #ifdef PNG_OUTPUT
 png::image<png::rgb_pixel> image(1280, 960);
@@ -82,6 +82,7 @@ int main(int argc, char* argv[])
 	Sphere bg(Eigen::Vector3d(0, -100000, 0), 99995);
 	Sphere s(Eigen::Vector3d(0.816497 + E, -4, -10.3382), 1);
 	Texture t;
+	t.setKm(RGB(0, 0, 0));
 	t.p = 2000;
 	t.setKa(RGB(1, 0.5, 0.5));
 	t.setKs(RGB(10, 5, 5));
@@ -109,7 +110,7 @@ int main(int argc, char* argv[])
 	t.setKd(RGB(6, 1, 8));
 	s.texture = t;
 	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-5 + E, -5, -10);
+	s.cent_pos = Eigen::Vector3d(-5. + E, -5, -10);
 	s.radius = 2;
 	t.p = 10000;
 	t.setKa(RGB(0.3, 0.3, 0.3));
@@ -127,7 +128,7 @@ int main(int argc, char* argv[])
 	rt.addSurface(s);
 	s.cent_pos = Eigen::Vector3d(-3.71442 + E, -3.4679, -10);
 	rt.addSurface(s);
-	s.cent_pos = Eigen::Vector3d(-5 + E, -4.4, -8.2);
+	s.cent_pos = Eigen::Vector3d(-5. + E, -4.4, -8.2);
 	s.radius = 0.5;
 	rt.addSurface(s);
 
@@ -152,6 +153,7 @@ int main(int argc, char* argv[])
 	t.setKa(RGB(0.5, 0.5, 0.5));
 	t.setKs(RGB(3, 3, 3));
 	t.setKd(RGB(3, 3, 3));
+	t.setKm(RGB(2, 2, 2));
 	bg.texture = t;
 	PointLight ptl(Eigen::Vector3d(2, 5, -6), RGB(0.9, 0.9, 0.9));
 	PointLight ptl2(Eigen::Vector3d(-2, 2.5, -7), RGB(0.9, 0.9, 0.9));
@@ -160,7 +162,7 @@ int main(int argc, char* argv[])
 	rt.addPtls(ptl2);
 	rt.addPtls(ptl);
 	rt.addPtls(ptl2);
-	rt.addPtls(ptl3);
+	//rt.addPtls(ptl3);
 	rt.addSurface(bg);
 	/*Sphere s(Eigen::Vector3d(-1.2, -1, -8), 1);
 	Sphere s2(Eigen::Vector3d(1, -1, -8.5), 1);

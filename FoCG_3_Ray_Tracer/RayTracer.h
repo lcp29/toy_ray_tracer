@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Surface.h"
 #include "Ray.h"
 #include "RGB.h"
@@ -29,20 +30,23 @@ public:
 	RayTracer();
 	~RayTracer();
 	void draw();
+	RGB render(const Ray& ray);
+	RGB render_nomirror(const Ray& ray, Ray& res, Texture& t);
 	void addSurface(const Sphere& s);
 	void addPtls(const PointLight& p);
 	unsigned enbflag;
 	RGB getPixel(int x, int y);
 	RGB Ia;
+	void setCamera(const Eigen::Vector3d& e, const Eigen::Vector3d& u, const Eigen::Vector3d& v);
 private:
+	Eigen::Vector3d e, u, v;		//相机属性
 	RGB* vbuf[SX];	               // 屏幕像素SXxSY
 	std::vector<Surface*> surfaces; // 待渲染图元
 	std::vector<PointLight> ptls;  // 点光源
 	double dimco;				   // 亮度归一化系数
-	Eigen::Vector3d d;			   // 交点到视口平面距离
 	double l, b;				   // left, bottom
 	RGB bgcolor;
-	Ray genRay(int i, int j);
+	Ray genRay(Eigen::Vector3d e, Eigen::Vector3d v, Eigen::Vector3d w, int i, int j);
 	bool hit(const Ray& r, bool cal_int, Eigen::Vector3d& pos, Eigen::Vector3d& norm, Texture& te);
 };
 

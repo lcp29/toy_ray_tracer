@@ -30,7 +30,8 @@ int f2i(double f)
 	return i;
 }
 
-bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls);
+bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls
+	, Eigen::Vector3d& e, Eigen::Vector3d& v, Eigen::Vector3d& u);
 
 typedef struct timpack
 {
@@ -83,11 +84,13 @@ int main(int argc, char* argv[])
 	RayTracer rt;
 	std::vector<Surface*> sur;
 	std::vector<PointLight> ptls;
-	if (!getmod(sur, ptls))
+	Eigen::Vector3d ce, cu, cv;
+	if (!getmod(sur, ptls, ce, cv, cu))
 	{
 		std::cout << "Error reading file \'mod.txt\'.\n" << std::endl;
 		return 0;
 	}
+	rt.setCamera(ce, cu, cv);
 	for (auto i = sur.begin(); i != sur.end(); i++)
 		rt.addSurface(*i);
 	for (auto i = ptls.begin(); i != ptls.end(); i++)
@@ -119,7 +122,8 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls)
+bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls
+	, Eigen::Vector3d& e, Eigen::Vector3d& v, Eigen::Vector3d& u)
 {
 	std::ifstream mod;
 	mod.open("mod.txt", std::ios::in);
@@ -171,6 +175,12 @@ bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls)
 				liness >> ptl.pos[0] >> ptl.pos[1] >> ptl.pos[2]
 					>> ptl.luminance.r >> ptl.luminance.g >> ptl.luminance.b;
 				ptls.push_back(ptl);
+			}
+			else if (line == "c")
+			{
+				liness >> e[0] >> e[1] >> e[2]
+					>> v[0] >> v[1] >> v[2]
+					>> u[0] >> u[1] >> u[2];
 			}
 		}
 	}

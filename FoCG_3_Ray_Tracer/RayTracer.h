@@ -11,6 +11,7 @@
 #include <cmath>
 #include <eigen3/Eigen/Eigen>
 #include <limits>
+#include <omp.h>
 
 #define ENABLE_DIFFUSE 1
 #define ENABLE_SPECULAR 1<<1

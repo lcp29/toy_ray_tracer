@@ -25,6 +25,7 @@ RayTracer::~RayTracer()
 
 void RayTracer::draw()
 {
+	#pragma omp parallel for
 	for (int i = 0; i < SX; i++)
 	{
 		for (int j = 0; j < SY; j++)

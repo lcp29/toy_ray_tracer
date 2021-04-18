@@ -11,6 +11,7 @@
 #include <cmath>
 #include <eigen3/Eigen/Eigen>
 #include <limits>
+#include <random>
 #include <omp.h>
 
 #define ENABLE_DIFFUSE 1
@@ -19,10 +20,11 @@
 #define ENABLE_SHADOW 1<<3
 #define ENABLE_MIRROR 1<<4
 
-#define SX 1280
-#define SY 960
+#define SX 5120
+#define SY 3840
+#define SCNT 8;
 
-constexpr double epsilon = 1e-8;
+constexpr double epsilon = 1e-6;
 
 class RayTracer
 {
@@ -31,11 +33,12 @@ public:
 	RayTracer();
 	~RayTracer();
 	void draw();
-	RGB render(const Ray& ray);
+	RGB render(const Ray& ray, int ref_cnt);
 	RGB render_nomirror(const Ray& r, Eigen::Vector3d& pos, Eigen::Vector3d& nor, Texture& t);
 	void addSurface(const Sphere& s);
 	void addSurface(Surface* s);
 	void addPtls(const PointLight& p);
+	Eigen::Vector3d scatterVec(const Eigen::Vector3d dir, const Texture& t);
 	unsigned enbflag;
 	RGB getPixel(int x, int y);
 	RGB Ia;
@@ -50,5 +53,6 @@ private:
 	RGB bgcolor;
 	Ray genRay(Eigen::Vector3d e, Eigen::Vector3d v, Eigen::Vector3d w, int i, int j);
 	bool hit(const Ray& r, bool cal_int, Eigen::Vector3d& pos, Eigen::Vector3d& norm, Texture& te);
+	std::default_random_engine rengine;
 };
 

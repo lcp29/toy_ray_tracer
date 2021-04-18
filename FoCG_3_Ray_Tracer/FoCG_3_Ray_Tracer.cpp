@@ -15,10 +15,11 @@
 #include <fstream>
 #include <map>
 
-#define SDL_DRAW 1
+//#define SDL_DRAW 1
+#define PNG_OUTPUT 1
 
 #ifdef PNG_OUTPUT
-png::image<png::rgb_pixel> image(1280, 960);
+png::image<png::rgb_pixel> image(SX, SY);
 #elif SDL_DRAW
 #define E 2
 #endif
@@ -71,14 +72,6 @@ Uint32 rtdraw(Uint32 interval, void* tp)
 
 int main(int argc, char* argv[])
 {
-#ifdef PNG_OUTPUT
-	std::string offsets;
-	if (argc == 2)
-		offsets = argv[1];
-	else
-		offsets = 2;
-	double E = std::stod(offsets);
-#endif
 	std::ios::sync_with_stdio(false);
 
 	RayTracer rt;
@@ -154,7 +147,7 @@ bool getmod(std::vector<Surface*>& surfaces, std::vector<PointLight>& ptls
 					>> t.km.r >> t.km.g >> t.km.b
 					>> t.ka.r >> t.ka.g >> t.ka.b
 					>> t.ks.r >> t.ks.g >> t.ks.b
-					>> t.kd.r >> t.kd.g >> t.kd.b >> t.p;
+					>> t.kd.r >> t.kd.g >> t.kd.b >> t.p >> t.scat;
 				textures[line] = t;
 			}
 			else if (line == "s")

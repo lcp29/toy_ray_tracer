@@ -31,22 +31,33 @@ void RayTracer::draw()
 		for (int j = 0; j < SY; j++)
 		{
 			Ray r = genRay(e, v, u, i, j);
-			vbuf[i][j] = render(r);
+			vbuf[i][j] = render(r, 1);
 		}
 	}
 }
 
-RGB RayTracer::render(const Ray& r)
+RGB RayTracer::render(const Ray& r, int ref_cnt)
 {
 	Eigen::Vector3d pos, nor;
 	Texture t, t2;
 	RGB pixel = render_nomirror(r, pos, nor, t);
 	if (enbflag & ENABLE_MIRROR && pos[0] != std::numeric_limits<double>::infinity() && (t.km.r != 0 || t.km.g != 0 || t.km.b != 0))
 	{
-		Eigen::Vector3d dir = r.direction - 2 * nor * nor.dot(r.direction);
-		Ray refl(pos + epsilon * dir, dir);
-		RGB refintensity = render_nomirror(refl, pos, nor, t2);
-		pixel = pixel + t.km * refintensity;
+		RGB scattmp(0, 0, 0);
+		for (int i = 0; i < 8; i++)
+		{
+			Eigen::Vector3d dir = r.direction - 2 * nor * nor.dot(r.direction);
+			dir.normalize();
+			dir += scatterVec(dir, t);
+			Ray refl(pos + epsilon * dir, dir);
+			RGB refintensity;
+			if (ref_cnt == 0)
+				refintensity = render_nomirror(refl, pos, nor, t2);
+			else
+				refintensity = render(refl, ref_cnt - 1);
+			scattmp = scattmp + refintensity;
+		}
+		pixel = pixel + t.km * scattmp / 4;
 	}
 	return pixel;
 }
@@ -117,6 +128,20 @@ void RayTracer::addSurface(Surface* s)
 void RayTracer::addPtls(const PointLight& p)
 {
 	ptls.push_back(p);
+}
+
+Eigen::Vector3d RayTracer::scatterVec(const Eigen::Vector3d dir, const Texture& t)
+{
+	// construct 3d axis
+	Eigen::Vector3d u(1, 1, -(dir[0] + dir[1]) / dir[2]);
+	Eigen::Vector3d v = u.cross(dir);
+	u.normalize();
+	v.normalize();
+	// set sigma^2
+	std::normal_distribution<double> xy(0, t.scat);
+	u *= xy(rengine);
+	v *= xy(rengine);
+	return u + v;
 }
 
 RGB RayTracer::getPixel(int x, int y)

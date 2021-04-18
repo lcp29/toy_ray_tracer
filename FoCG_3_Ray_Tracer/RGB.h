@@ -10,6 +10,7 @@ public:
 	RGB operator-(const RGB& b);
 	RGB operator*(const RGB& b);
 	RGB operator*(const double& b);
+	RGB operator/(const double& b);
 };
 
 RGB operator*(const double& a, const RGB& b);

@@ -4,7 +4,6 @@ RayTracer::RayTracer()
 {
 	for (int i = 0; i < SX; i++)
 		vbuf[i] = new RGB[SY];
-	dimco = 1;
 	l = -0.1;
 	b = -0.075;
 	bgcolor = RGB(0, 0, 0);

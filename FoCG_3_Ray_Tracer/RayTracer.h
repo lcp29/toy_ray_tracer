@@ -44,12 +44,11 @@ public:
 	RGB Ia;
 	void setCamera(const Eigen::Vector3d& e, const Eigen::Vector3d& u, const Eigen::Vector3d& v);
 private:
-	Eigen::Vector3d e, u, v;		//相机属性
-	RGB* vbuf[SX];	               // 屏幕像素SXxSY
+	Eigen::Vector3d e, u, v;		// 相机属性
+	RGB* vbuf[SX];	                // 屏幕像素SXxSY
 	std::vector<Surface*> surfaces; // 待渲染图元
-	std::vector<PointLight> ptls;  // 点光源
-	double dimco;				   // 亮度归一化系数
-	double l, b;				   // left, bottom
+	std::vector<PointLight> ptls;   // 点光源
+	double l, b;				    // left, bottom
 	RGB bgcolor;
 	Ray genRay(Eigen::Vector3d e, Eigen::Vector3d v, Eigen::Vector3d w, int i, int j);
 	bool hit(const Ray& r, bool cal_int, Eigen::Vector3d& pos, Eigen::Vector3d& norm, Texture& te);

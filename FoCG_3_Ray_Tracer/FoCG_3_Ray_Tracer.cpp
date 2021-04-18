@@ -24,7 +24,7 @@ png::image<png::rgb_pixel> image(SX, SY);
 #define E 2
 #endif
 
-int f2i(double f)
+constexpr int f2i(double f)
 {
 	int i = f / 20 * 255;
 	if (i > 255) i = 255;
@@ -43,7 +43,7 @@ typedef struct timpack
 Uint32 rtdraw(Uint32 interval, void* tp)
 {
 	RayTracer* prt = static_cast<timpack*>(tp)->rt;
-	SDL_Renderer* renderer = static_cast<timpack*>(tp)->renderer;
+	const SDL_Renderer* renderer = static_cast<timpack*>(tp)->renderer;
 	//if (++flagt == 16) flagt = 0;
 	//prt->enbflag = flagt;
 	prt->draw();
@@ -70,7 +70,7 @@ Uint32 rtdraw(Uint32 interval, void* tp)
 	return 1000;
 }
 
-int main(int argc, char* argv[])
+int main(int, char**)
 {
 	std::ios::sync_with_stdio(false);
 

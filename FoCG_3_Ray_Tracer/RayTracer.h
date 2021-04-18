@@ -20,8 +20,8 @@
 #define ENABLE_SHADOW 1<<3
 #define ENABLE_MIRROR 1<<4
 
-#define SX 5120
-#define SY 3840
+#define SX 1280
+#define SY 960
 #define SCNT 8;
 
 constexpr double epsilon = 1e-6;

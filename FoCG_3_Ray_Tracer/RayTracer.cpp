@@ -44,7 +44,7 @@ RGB RayTracer::render(const Ray& r, int ref_cnt)
 	if (enbflag & ENABLE_MIRROR && pos[0] != std::numeric_limits<double>::infinity() && (t.km.r != 0 || t.km.g != 0 || t.km.b != 0))
 	{
 		RGB scattmp(0, 0, 0);
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < SCNT; i++)
 		{
 			Eigen::Vector3d dir = r.direction - 2 * nor * nor.dot(r.direction);
 			dir.normalize();
@@ -57,7 +57,7 @@ RGB RayTracer::render(const Ray& r, int ref_cnt)
 				refintensity = render(refl, ref_cnt - 1);
 			scattmp = scattmp + refintensity;
 		}
-		pixel = pixel + t.km * scattmp / 4;
+		pixel = pixel + t.km * scattmp / SCNT;
 	}
 	return pixel;
 }

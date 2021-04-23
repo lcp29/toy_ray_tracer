@@ -18,8 +18,10 @@
 //#define SDL_DRAW 1
 #define PNG_OUTPUT 1
 
+#define DIVD 4
+
 #ifdef PNG_OUTPUT
-png::image<png::rgb_pixel> image(SX, SY);
+png::image<png::rgb_pixel> image(SX / DIVD, SY / DIVD);
 #elif SDL_DRAW
 #define E 2
 #endif
@@ -43,7 +45,7 @@ typedef struct timpack
 Uint32 rtdraw(Uint32 interval, void* tp)
 {
 	RayTracer* prt = static_cast<timpack*>(tp)->rt;
-	const SDL_Renderer* renderer = static_cast<timpack*>(tp)->renderer;
+	SDL_Renderer* renderer = static_cast<timpack*>(tp)->renderer;
 	//if (++flagt == 16) flagt = 0;
 	//prt->enbflag = flagt;
 	prt->draw();
@@ -51,10 +53,19 @@ Uint32 rtdraw(Uint32 interval, void* tp)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 #endif
-	for (int i = 0; i < SX; i++)
-		for (int j = 0; j < SY; j++)
+	for (int i = 0; i < SX / DIVD; i++)
+	{
+		for (int j = 0; j < SY / DIVD; j++)
 		{
-			RGB pixel = prt->getPixel(i, SY - j - 1);
+			RGB pixel(0, 0, 0);
+			for (int ki = 0; ki < DIVD; ki++)
+			{
+				for (int kj = 0; kj < DIVD; kj++)
+				{
+					pixel = pixel + prt->getPixel(i * DIVD + ki, SY - (j * DIVD + kj) - 1);
+				}
+			}
+			pixel = pixel / (DIVD * DIVD);
 #ifdef SDL_DRAW
 			SDL_SetRenderDrawColor(renderer, f2i(pixel.r), f2i(pixel.g), f2i(pixel.b), 1);
 			SDL_RenderDrawPoint(renderer, i, j);
@@ -62,6 +73,7 @@ Uint32 rtdraw(Uint32 interval, void* tp)
 			image[j][i] = png::rgb_pixel(f2i(pixel.r), f2i(pixel.g), f2i(pixel.b));
 #endif
 		}
+	}
 #ifdef SDL_DRAW
 	SDL_RenderPresent(renderer);
 #elif PNG_OUTPUT
@@ -94,7 +106,7 @@ int main(int, char**)
 	SDL_Window* win = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_CreateWindowAndRenderer(SX, SY, 0, &win, &renderer);
+	SDL_CreateWindowAndRenderer(SX / DIVD, SY / DIVD, 0, &win, &renderer);
 	tp.renderer = renderer;
 #elif PNG_OUTPUT
 	tp.renderer = NULL;

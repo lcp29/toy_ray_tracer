@@ -3,6 +3,8 @@ Fundamentals of Computer Graphics第三章的简陋光追demo. C++实现.
 
 ![screenshot3](doc/screenshot3.png)
 
+![output](doc/output.png)
+
 doc里面有动图，但那张图没有镜面
 
 话说粗糙的东西表面却像镜子一样看起来就很离谱，于是在反射光上加上了朴素的二维高斯分布
@@ -23,7 +25,7 @@ doc里面有动图，但那张图没有镜面
 
 但是效果也没好到哪儿去
 
-![sss](doc/sss.png)
+![sss](doc/screenshot3.png)
 
 下次应该先卷个积什么的……太麻烦了，这种脏活本来就该给GPU算啊，但是cuda和opencl什么的好像很麻烦啊，先学学看
 

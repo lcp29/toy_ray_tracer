@@ -18,7 +18,7 @@
 //#define SDL_DRAW 1
 #define PNG_OUTPUT 1
 
-#define DIVD 4
+#define DIVD 1
 
 #ifdef PNG_OUTPUT
 png::image<png::rgb_pixel> image(SX / DIVD, SY / DIVD);

@@ -40,3 +40,8 @@
 /FoCG_3_Ray_tracer/x64/
 /utils/bin/
 /x64/
+
+# CLion
+
+/cmake-build-debug/
+/cmake-build-release/
